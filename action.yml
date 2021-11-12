@@ -13,6 +13,6 @@ runs:
   steps:
     - id: commit-message-matcher
       run: |
-        SHA=$(git log --format=%B -n 1 ${{ github.event.after }})
-        ${{ github.action_path }}/matcher.sh "$SHA" ${{ inputs.pattern }}
+        SHA=${{ github.event.after }}
+        ${{ github.action_path }}/matcher.sh "$SHA" "${{ inputs.pattern }}"
       shell: bash

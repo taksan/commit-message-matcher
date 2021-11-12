@@ -4,6 +4,9 @@ set -euo pipefail
 function prepare() {
     exec 3>&1
     exec 1>&-
+    git config --global user.email "you@example.com"
+    git config --global user.name "Your Name"
+
     rm -fr fake-repo
     mkdir fake-repo
     echo "fake-repo" > fake-repo/README.md
@@ -31,7 +34,7 @@ function should_not_match() {
 function @test() {
     local test_name=$1
     $test_name > /tmp/error || {
-        echo "$test_name ${txtred}failed${txtreset}"
+        echo "$test_name *failed*"
         cat /tmp/error
         FAIL_COUNT=$((FAIL_COUNT + 1))
         return 1
@@ -48,8 +51,6 @@ function assert_equals() {
     fi
 }
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-txtred=$(tput setaf 1)    # Red
-txtreset=$(tput sgr0)     # Reset your text
 
 SUBJECT=$(realpath ${DIR}/../matcher.sh)
 
