@@ -1,0 +1,18 @@
+name: 'Commit message matcher'
+description: 'Check whether last commint message matches a given pattern'
+inputs:
+  pattern:
+    description: 'pattern to match'
+    required: true
+outputs:
+  matches:
+    description: "Whether message matchers a pattern (a string true or false)"
+    value: ${{ steps.commit-message-matcher.outputs.matches }}
+runs:
+  using: "composite"
+  steps:
+    - id: commit-message-matcher
+      run: |
+        SHA=$(git log --format=%B -n 1 ${{ github.event.after }})
+        ${{ github.action_path }}/matcher.sh "$SHA" ${{ inputs.pattern }}
+      shell: bash
