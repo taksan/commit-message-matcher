@@ -11,14 +11,12 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: echo "$GITHUB_CONTEXT"
-      shell: bash
-
     - id: commit-message-matcher
       run: |
-        SHA=${{ github.event.after }}
+        if [[ ! -z "${{ github.event.after }}" ]]; then
+          SHA="${{ github.event.after }}"
+        else
+          SHA="${{ github.sha }}"
+        fi
         ${{ github.action_path }}/matcher.sh "$SHA" "${{ inputs.pattern }}"
       shell: bash
